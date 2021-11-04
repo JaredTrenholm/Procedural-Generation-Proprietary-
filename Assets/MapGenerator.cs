@@ -39,7 +39,7 @@ public class MapGenerator : MonoBehaviour
             for (float z = 0; z < length; z++)
             {
                 GameObject cubeCreated = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cubeCreated.transform.position = new Vector3(x, PerlinNoise(x * Time.realtimeSinceStartup, z * Time.realtimeSinceStartup), z);
+                cubeCreated.transform.position = new Vector3(x, PerlinNoise(x+ Time.time, z+Time.time), z);
                 cubes.Add(cubeCreated);
                 cubeCreated.transform.localScale = new Vector3(1.125f, 1.125f, 1.125f);
             }
@@ -56,6 +56,6 @@ public class MapGenerator : MonoBehaviour
     }
     private float PerlinNoise(float x, float y)
     {
-        return (Mathf.PerlinNoise(Random.Range(0,100) + x, Random.Range(0,100) + y)*freq)-amp;
+        return (((Mathf.PerlinNoise(x, y)*freq)-amp)*2)-1;
     }
 }
