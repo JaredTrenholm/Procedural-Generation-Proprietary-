@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class MapGenerator : MonoBehaviour
 {
-    public bool useRandomSeed;
-    public string seed;
     public float width;
     public float length;
 
     public float freq;
     public float amp;
 
+    private string seed;
     private List<GameObject> cubes = new List<GameObject>();
     void Start()
     {
@@ -48,10 +47,7 @@ public class MapGenerator : MonoBehaviour
     }
     private int CreateSeed()
     {
-        if (useRandomSeed)
-        {
-            seed = "" + Random.Range(int.MinValue, int.MaxValue);
-        }
+        seed = "" + Random.Range(int.MinValue, int.MaxValue);
         return seed.GetHashCode();
     }
     private void ActivateSeed(int seedCode)
