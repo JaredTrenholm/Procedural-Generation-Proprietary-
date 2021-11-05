@@ -15,9 +15,12 @@ public class MapGenerator : MonoBehaviour
     private List<GameObject> topLayerCubes = new List<GameObject>();
     private List<GameObject> middleLayerCubes = new List<GameObject>();
 
-   
+    private List<Vector3> vertices = new List<Vector3>();
+    private Mesh mesh;
+    public MeshFilter filter;
     void Start()
     {
+        mesh = new Mesh();
         StartGeneration();
     }
     void Update()
@@ -57,12 +60,19 @@ public class MapGenerator : MonoBehaviour
         {
             for (float z = 0; z < length; z++)
             {
-                GameObject cubeCreated = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                cubeCreated.transform.position = new Vector3(x, PerlinNoise(x / 2, z / 2) + PerlinNoise(z / 2, x / 2), z);
-                cubeCreated.GetComponent<MeshRenderer>().material = topLayerMaterial;
-                topLayerCubes.Add(cubeCreated);
+                vertices.Add(new Vector3(x, PerlinNoise(x / 2, z / 2) + PerlinNoise(z / 2, x / 2), z));
             }
         }
+
+        Vector3[] verticesArray = new Vector3[vertices.Count];
+        int verticeCount = 0;
+        foreach (Vector3 vertice in vertices)
+        {
+            verticesArray[verticeCount] = vertice;
+        }
+        mesh.vertices = verticesArray;
+        mesh.SetVertices(vertices);
+        filter.mesh = mesh;
     }
     private void CreateMiddleLayer()
     {
