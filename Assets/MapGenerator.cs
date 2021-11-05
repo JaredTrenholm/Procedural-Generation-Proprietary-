@@ -70,6 +70,23 @@ public class MapGenerator : MonoBehaviour
         {
             verticesArray[verticeCount] = vertice;
         }
+
+        int[] triangles = new int[(int)width* (int)length];
+        int verticeBeingUsed = 0;
+        int triangle = 0;
+        for(int x = 0; x < 1; x++)
+        {
+            triangles[triangle] = verticeBeingUsed;
+            triangles[triangle + 1] = verticeBeingUsed+2;
+            triangles[triangle + 2] = verticeBeingUsed+1;
+            triangles[triangle + 3] = verticeBeingUsed+1;
+            triangles[triangle + 4] = verticeBeingUsed+2;
+            triangles[triangle + 5] = verticeBeingUsed+3;
+            verticeBeingUsed++;
+            triangle += 6;
+        }
+
+        mesh.SetTriangles(triangles,0);
         mesh.vertices = verticesArray;
         mesh.SetVertices(vertices);
         filter.mesh = mesh;
