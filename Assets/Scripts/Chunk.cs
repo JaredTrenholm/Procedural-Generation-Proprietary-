@@ -23,8 +23,7 @@ public class Chunk : MonoBehaviour
         Plains,
         Pond,
         ForestHigh,
-        Swamp,
-        SmallHole
+        Swamp
     }
     public void GenerateChunk(int random)
     {
@@ -55,14 +54,6 @@ public class Chunk : MonoBehaviour
         {
             biomeType = Biome.Plains;
         }
-
-        if(biomeType == Biome.Plains)
-        {
-            if(random % 2 == 0 && random % 3 != 0)
-            {
-                biomeType = Biome.SmallHole;
-            }
-        }
     }
     private void CreateTopLayer()
     {
@@ -71,33 +62,8 @@ public class Chunk : MonoBehaviour
         {
             for (float z = 0; z < width; z++)
             {
-                if (biomeType != Biome.SmallHole)
-                {
-                    cubeCreated = GameObject.Instantiate(topPrefab);
-                    cubeCreated.transform.position = new Vector3(this.transform.position.x + x, this.transform.position.y + GetNewHeight(this.transform.position.x + x, this.transform.position.z + z), this.transform.position.z + z);
-                    
-                } else
-                {
-                    float y = GetNewHeight(this.transform.position.x + x, this.transform.position.z + z);
-                    if (y == 0)
-                    {
-                        cubeCreated = GameObject.Instantiate(topPrefab);
-                        cubeCreated.transform.position = new Vector3(this.transform.position.x + x, this.transform.position.y + y, this.transform.position.z + z);
-                        return;
-                    }
-                    else if (Random.Range(0, 101) > 50)
-                    {
-                        y += 1;
-                        cubeCreated = GameObject.Instantiate(middlePrefab);
-                        cubeCreated.transform.position = new Vector3(this.transform.position.x + x, this.transform.position.y + y, this.transform.position.z + z);
-                    }
-                    else
-                    {
-                        cubeCreated = GameObject.Instantiate(middlePrefab);
-                        cubeCreated.transform.position = new Vector3(this.transform.position.x + x, this.transform.position.y + y, this.transform.position.z + z);
-                    }
-                }
-
+                cubeCreated = GameObject.Instantiate(topPrefab);
+                cubeCreated.transform.position = new Vector3(this.transform.position.x + x, this.transform.position.y + GetNewHeight(this.transform.position.x + x, this.transform.position.z + z), this.transform.position.z + z);
                 cubeCreated.transform.parent = this.gameObject.transform;
                 topLayer.Add(cubeCreated);
                 CreateUnderneath(cubeCreated);
@@ -187,7 +153,7 @@ public class Chunk : MonoBehaviour
         float perlin = Mathf.PerlinNoise(x/width, y/width);
         perlin = Mathf.Round(perlin);
 
-        if(biomeType == Biome.Pond || biomeType == Biome.Swamp || biomeType == Biome.SmallHole)
+        if(biomeType == Biome.Pond || biomeType == Biome.Swamp)
         {
             return -perlin;
         } else
@@ -202,7 +168,7 @@ public class Chunk : MonoBehaviour
         {
             foreach (GameObject detail in detailLayer)
             {
-                if (detail.transform.position != objectToPlace.transform.position)
+                if (detail.transform.position.x != objectToPlace.transform.position.x && detail.transform.position.z != objectToPlace.transform.position.z)
                 {
                     if (Random.Range(0, 11) > 9)
                     {
