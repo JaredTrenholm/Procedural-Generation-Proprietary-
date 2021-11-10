@@ -4,6 +4,7 @@ using UnityEngine;
 public class MapGenerator : MonoBehaviour
 {
     public GameObject chunkPrefab;
+    public PlayerStart playerStart;
     public float width;
     public float length;
     public string seed;
@@ -17,6 +18,7 @@ public class MapGenerator : MonoBehaviour
     }
     void Update()
     {
+
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             StartGeneration();
@@ -27,6 +29,7 @@ public class MapGenerator : MonoBehaviour
         DeleteChunks();
         ActivateSeed(GetSeed());
         GenerateChunks();
+        PlacePlayer();
     }
 
     private void DeleteChunks()
@@ -45,10 +48,29 @@ public class MapGenerator : MonoBehaviour
             {
                 GameObject chunk = Instantiate(chunkPrefab);
                 chunk.transform.position = new Vector3(this.transform.position.x + x*5, this.transform.position.y, this.transform.position.z + z*5);
-                chunk.GetComponent<Chunk>().PlaceBlocks();
+                chunk.GetComponent<Chunk>().GenerateChunk(Random.Range(0,101));
                 chunks.Add(chunk);
             }
         }
+    }
+
+    private void PlacePlayer()
+    {
+        bool playerPlaced = false;
+        foreach(GameObject chunk in chunks)
+        {
+            if (Random.Range(0, 11) > 9)
+            {
+                chunk.GetComponent<Chunk>().PlaceObject(playerStart.gameObject);
+                playerPlaced = true;
+                break;
+            }
+        }
+        if(playerPlaced != true)
+        {
+            playerStart.transform.position = new Vector3(this.transform.position.x, this.transform.position.y + 1, this.transform.position.z);
+        }
+        playerStart.Spawn();
     }
     private int GetSeed()
     {
